@@ -1,4 +1,19 @@
-const http = require("http");
+const express = require("express");
+const cors = require("cors");
+bodyParser = require("body-parser");
+const app = express();
+
+var corsOptions = {
+    origin: "http://localhost:3000",
+};
+
+app.use(cors(corsOptions));
+
+// parse requests of content-type - application/json
+app.use(bodyParser.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = require("./models");
 db.mongoose
@@ -14,24 +29,29 @@ db.mongoose
         process.exit();
     });
 
+//Routes using Express
 
-const server = http.createServer(function (req, res) {
-    if (req.url === "/movies") {
-        res.write("All Movies Data in JSON format from Mongo DB");
-        res.end();
-    }
-
-    if (req.url === "/genres") {
-        res.write("All Genres Data in JSON format from Mongo DB");
-        res.end();
-    }
-
-    if (req.url === "/artists") {
-        res.write("All Artists Data in JSON format from Mongo DB");
-        res.end();
-    }
+app.get("/", (req, res) => {
+    res.json({
+        message: "Welcome to Upgrad Movie booking application development.",
+    });
 });
 
-server.listen(9000);
+app.get("/movies", (req, res) => {
+    res.json({ message: "All Movies Data in JSON format from Mongo DB" });
+});
 
-console.log("Listening on port 9000");
+app.get("/genres", (req, res) => {
+    res.json({ message: "All Genres Data in JSON format from Mongo DB" });
+});
+
+app.get("/artists", (req, res) => {
+    res.json({ message: "All Artists Data in JSON format from Mongo DB" });
+});
+
+// set port, listen for requests
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}.`);
+});
