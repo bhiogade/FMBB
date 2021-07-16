@@ -20,6 +20,7 @@ db.mongoose
     .connect(db.url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        useCreateIndex: true,
     })
     .then(() => {
         console.log("Connected to the database!");
@@ -37,17 +38,10 @@ app.get("/", (req, res) => {
     });
 });
 
-app.get("/movies", (req, res) => {
-    res.json({ message: "All Movies Data in JSON format from Mongo DB" });
-});
-
-app.get("/genres", (req, res) => {
-    res.json({ message: "All Genres Data in JSON format from Mongo DB" });
-});
-
-app.get("/artists", (req, res) => {
-    res.json({ message: "All Artists Data in JSON format from Mongo DB" });
-});
+require("./routes/artist.routes")(app);
+require("./routes/genre.routes")(app);
+require("./routes/movie.routes")(app);
+require("./routes/user.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;

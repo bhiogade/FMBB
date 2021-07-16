@@ -1,5 +1,7 @@
+const auth = require("../middleware/auth");
+
 module.exports = (app) => {
-    const movies = require("../controllers/movie.controller");
+    const movies = require("../controllers/movie.controller.js");
 
     var router = require("express").Router();
 
@@ -10,7 +12,7 @@ module.exports = (app) => {
     router.get("/movies/:status", movies.findAllMovies);
 
     // Retrieve all Movies by movieId
-    router.get("/movies/:id", movies.findOne);
+    router.get("/:id", movies.findOne);
 
     // Retrieve all published Courses
     router.get(
@@ -18,5 +20,5 @@ module.exports = (app) => {
         movies.findShows
     );
 
-    app.use("/api", router);
+    app.use("/api/movies", auth, router);
 };

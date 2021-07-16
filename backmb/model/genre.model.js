@@ -4,8 +4,8 @@ module.exports = mongoose => {
         mongoose.Schema(
             {
                 genreid: Number,
-                genre: String
-            }
+                genre: String,
+            },
 
         )
     );

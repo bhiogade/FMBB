@@ -12,7 +12,7 @@ module.exports = (mongoose) => {
             role: String,
             isLoggedIn: Boolean,
             uuid: String,
-            accesstoken: String,
+            token: String,
             coupens: [
                 {
                     id: Number,

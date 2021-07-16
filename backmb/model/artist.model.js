@@ -8,8 +8,13 @@ module.exports = mongoose => {
                 last_name: String,
                 wiki_url: String,
                 profile_url: String,
-                movies: [String]
-            }
+                movies: [
+                    {
+                        type: String,
+                    },
+                ],
+            },
+
 
         )
     );
