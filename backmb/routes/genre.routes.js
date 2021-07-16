@@ -7,5 +7,5 @@ module.exports = (app) => {
 
     router.get("/genres", genres.findAllGenres);
 
-    app.use("/api", auth, router);
+    app.use("/api", router);
 };

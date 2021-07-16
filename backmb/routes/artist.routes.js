@@ -7,5 +7,5 @@ module.exports = (app) => {
 
     router.get("/artists", artists.findAllArtists);
 
-    app.use("/api", auth, router);
+    app.use("/api", router);
 };
