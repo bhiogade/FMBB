@@ -38,6 +38,7 @@ app.get("/", (req, res) => {
     });
 });
 
+
 require("./routes/artist.routes")(app);
 require("./routes/genre.routes")(app);
 require("./routes/movie.routes")(app);
