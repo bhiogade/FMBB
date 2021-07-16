@@ -1,30 +1,31 @@
-import React, { Component } from 'react';
-import Header from '../../common/header/Header';
-import './Confirmation.css';
-import Typography from '@material-ui/core/Typography';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import green from '@material-ui/core/colors/green';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import Header from "../../common/header/Header";
+import "./Confirmation.css";
+import Typography from "@material-ui/core/Typography";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import { withStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import green from "@material-ui/core/colors/green";
+import { Link } from "react-router-dom";
 
-const styles = theme => ({
+const styles = (theme) => ({
+
   close: {
     width: theme.spacing.unit * 4,
     height: theme.spacing.unit * 4,
   },
   success: {
     color: green[600],
-  }
+  },
 });
 
 class Confirmation extends Component {
@@ -37,13 +38,15 @@ class Confirmation extends Component {
       bookingId: "",
       couponCode: "",
       totalPrice: 0,
-      originalTotalPrice: 0
-    }
+      originalTotalPrice: 0,
+    };
   }
 
   componentDidMount() {
     let currentState = this.state;
-    currentState.totalPrice = currentState.originalTotalPrice = parseInt(this.props.location.bookingSummary.unitPrice, 10) * parseInt(this.props.location.bookingSummary.tickets.length, 10);
+    currentState.totalPrice = currentState.originalTotalPrice =
+      parseInt(this.props.location.bookingSummary.unitPrice, 10) *
+      parseInt(this.props.location.bookingSummary.tickets.length, 10);
     this.setState({ state: currentState });
     debugger;
   }
@@ -51,14 +54,12 @@ class Confirmation extends Component {
   confirmBookingHandler = () => {
     console.log(this.props.location.bookingSummary.showId);
     let data = JSON.stringify({
-      "customerUuid": sessionStorage.getItem('uuid'),
-      "bookingRequest": {
-        "coupon_code": this.state.couponCode,
-        "show_id": this.props.location.bookingSummary.showId,
-        "tickets": [
-          this.props.location.bookingSummary.tickets.toString()
-        ]
-      }
+      customerUuid: sessionStorage.getItem("uuid"),
+      bookingRequest: {
+        coupon_code: this.state.couponCode,
+        show_id: this.props.location.bookingSummary.showId,
+        tickets: [this.props.location.bookingSummary.tickets.toString()],
+      },
     });
 
     let that = this;
@@ -67,12 +68,17 @@ class Confirmation extends Component {
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
         debugger;
-        that.setState({ bookingId: JSON.parse(this.responseText).reference_number });
+        that.setState({
+          bookingId: JSON.parse(this.responseText).reference_number,
+        });
       }
     });
 
     xhr.open("POST", this.props.baseUrl + "auth/bookings");
-    xhr.setRequestHeader("Authorization", "Bearer " + sessionStorage.getItem('access-token'));
+    xhr.setRequestHeader(
+      "Authorization",
+      "Bearer " + sessionStorage.getItem("access-token")
+    );
     xhr.setRequestHeader("Cache-Control", "no-cache");
     xhr.setRequestHeader("Content-Type", "application/json");
     
@@ -81,17 +87,17 @@ class Confirmation extends Component {
     xhr.send(data);
 
     this.setState({ open: true });
-  }
+   };
 
   snackBarCloseHandler = () => {
     this.props.history.push("/");
-  }
+  };
 
   couponCodeChangeHandler = (e) => {
     this.setState({ couponCode: e.target.value });
-  }
+  };
 
-  couponApplyHandler =( () => {
+  couponApplyHandler = (() => {
     console.log(this.state.couponCode);
     let that = this;
     let data = null;
@@ -105,7 +111,9 @@ class Confirmation extends Component {
         let discountValue = obj.discountValue;
         
         if (discountValue !== undefined && discountValue > 0) {
-          currentState.totalPrice = that.state.originalTotalPrice - ((that.state.originalTotalPrice * discountValue) / 100);
+          currentState.totalPrice =
+            that.state.originalTotalPrice -
+            (that.state.originalTotalPrice * discountValue) / 100;
           that.setState({ currentState });
         } else {
           currentState.totalPrice = that.state.originalTotalPrice;
@@ -114,8 +122,14 @@ class Confirmation extends Component {
       }
     });
 
-    xhr.open("GET", this.props.baseUrl + "auth/coupons?code=" + this.state.couponCode);
-    xhr.setRequestHeader("Authorization", "Bearer " + sessionStorage.getItem('access-token'));
+    xhr.open(
+      "GET",
+      this.props.baseUrl + "auth/coupons?code=" + this.state.couponCode
+    );
+    xhr.setRequestHeader(
+      "Authorization",
+      "Bearer " + sessionStorage.getItem("access-token")
+    );
     xhr.setRequestHeader("Cache-Control", "no-cache");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(data);
@@ -131,9 +145,7 @@ class Confirmation extends Component {
         <div className="confirmation marginTop16">
           <div>
             <Link to={"/bookshow/" + this.props.match.params.id}>
-              <Typography className="back" >
-                &#60; Back to Book Show
-                </Typography>
+              <Typography className="back">&#60; Back to Book Show</Typography>
             </Link>
             <br />
 
@@ -149,7 +161,9 @@ class Confirmation extends Component {
                     <Typography>Location:</Typography>
                   </div>
                   <div>
-                    <Typography>{this.props.location.bookingSummary.location}</Typography>
+                    <Typography>
+                      {this.props.location.bookingSummary.location}
+                    </Typography>
                   </div>
                 </div>
                 <br />
@@ -159,7 +173,9 @@ class Confirmation extends Component {
                     <Typography>Theatre:</Typography>
                   </div>
                   <div>
-                    <Typography>{this.props.location.bookingSummary.theatre}</Typography>
+                    <Typography>
+                      {this.props.location.bookingSummary.theatre}
+                    </Typography>
                   </div>
                 </div>
                 <br />
@@ -169,7 +185,9 @@ class Confirmation extends Component {
                     <Typography>Language:</Typography>
                   </div>
                   <div>
-                    <Typography>{this.props.location.bookingSummary.language}</Typography>
+                    <Typography>
+                      {this.props.location.bookingSummary.language}
+                    </Typography>
                   </div>
                 </div>
                 <br />
@@ -179,7 +197,9 @@ class Confirmation extends Component {
                     <Typography>Show Date:</Typography>
                   </div>
                   <div>
-                    <Typography>{this.props.location.bookingSummary.showDate}</Typography>
+                    <Typography>
+                      {this.props.location.bookingSummary.showDate}
+                    </Typography>
                   </div>
                 </div>
                 <br />
@@ -189,7 +209,9 @@ class Confirmation extends Component {
                     <Typography>Tickets:</Typography>
                   </div>
                   <div>
-                    <Typography>{this.props.location.bookingSummary.tickets.toString()}</Typography>
+                    <Typography>
+                      {this.props.location.bookingSummary.tickets.toString()}
+                    </Typography>
                   </div>
                 </div>
                 <br />
@@ -199,7 +221,9 @@ class Confirmation extends Component {
                     <Typography>Unit Price:</Typography>
                   </div>
                   <div>
-                    <Typography>{this.props.location.bookingSummary.unitPrice}</Typography>
+                    <Typography>
+                      {this.props.location.bookingSummary.unitPrice}
+                    </Typography>
                   </div>
                 </div>
                 <br />
@@ -214,10 +238,17 @@ class Confirmation extends Component {
                     </FormControl>
                   </div>
                   <div className="marginApply">
-                    <Button variant="contained" onClick={this.couponApplyHandler.bind(this)} color="primary">Apply</Button>
+                    <Button
+                      variant="contained"
+                      onClick={this.couponApplyHandler.bind(this)}
+                      color="primary"
+                    >
+                      Apply
+                    </Button>
                   </div>
                 </div>
-                <br /><br />
+                <br />
+                <br />
 
                 <div className="coupon-container">
                   <div className="confirmLeft">
@@ -227,9 +258,13 @@ class Confirmation extends Component {
                 </div>
                 <br />
 
-                <Button variant="contained" onClick={this.confirmBookingHandler} color="primary">
+                <Button
+                  variant="contained"
+                  onClick={this.confirmBookingHandler}
+                  color="primary"
+                >
                   Confirm Booking
-                  </Button>
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -237,15 +272,20 @@ class Confirmation extends Component {
 
         <Snackbar
           anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
+            vertical: "top",
+            horizontal: "center",
           }}
           className="snackbar"
           open={this.state.open}
           onClose={this.snackBarCloseHandler}
           message={
             <span id="client-snackbar" className={classes.success}>
-              <div className="confirm"><div><CheckCircleIcon /></div><div className="message"> Booking Confirmed!</div></div>
+              <div className="confirm">
+                <div>
+                  <CheckCircleIcon />
+                </div>
+                <div className="message"> Booking Confirmed!</div>
+              </div>
             </span>
           }
           action={[
@@ -261,7 +301,7 @@ class Confirmation extends Component {
           ]}
         />
       </div>
-    )
+    );
   }
 }
 
