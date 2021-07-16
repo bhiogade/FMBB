@@ -14,6 +14,7 @@ db.mongoose
         process.exit();
     });
 
+
 const server = http.createServer(function (req, res) {
     if (req.url === "/movies") {
         res.write("All Movies Data in JSON format from Mongo DB");
